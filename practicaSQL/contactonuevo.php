@@ -1,26 +1,22 @@
-<?php
-    include("cabecera.inc.php");
-
-?>
-
 <form action="#" method="post">
 
-    <h3>Formulario de Registro</h3>
+    <h3>Añadir un nuevo contacto a la agenda</h3>
 
     <?php 
         $nombre = " ";
         $valorNombre = "";
-        $apellidos = " ";
-        $valorApellidos = "";
-        $usuario = " ";
-        $valorUsuario = "";
-        $contra1 =" ";
-        $valorContra1 = "";
-        $contra2 = " ";
-        $mail = " ";
-        $valorMail = "";
-        $condiciones = " ";
-        
+        $apellido1 = " ";
+        $valorApellido1 = "";
+        $apellido2 = " ";
+        $valorApellido2 = "";
+        $telefono = " ";
+        $valorTelefono = "";
+        @$agenda = new mysqli('localhost', 'agenda', 'agenda', 'agenda');
+        if ($agenda->connect_errno != null) {
+            echo 'Error conectando a la base de datos: ';
+            echo $agenda->connect_error;
+            exit();
+        }
         $flag = true;
 
         if(isset($_POST['nombre']) && $_POST['nombre'] == ""){
@@ -29,95 +25,62 @@
             $flag = false;
         }
 
-        if(isset($_POST['apellidos'])&& $_POST['apellidos'] == ""){
-            $apellidos = 'Error: el campo apellido está vacío';
+        if(isset($_POST['apellido1'])&& $_POST['apellido1'] == ""){
+            $apellido1 = 'Error: el campo apellido está vacío';
             $flag = false;
         }
 
-        if(isset($_POST['usuario']) && $_POST['usuario'] == ""){
-            $usuario = 'Error: el campo nombre de usuario está vacío';
+        if(isset($_POST['apellido2'])&& $_POST['apellido2'] == ""){
+            $apellido2 = 'Error: el campo apellido está vacío';
             $flag = false;
         }
 
-        if(isset($_POST['contra1']) && $_POST['contra1'] == ""){
-            $contra1 = 'Error: el campo contraseña está vacío';
+        if(isset($_POST['telefono'])&& $_POST['telefono'] == ""){
+            $telefono = 'Error: el campo teléfono está vacío';
             $flag = false;
-        }
-
-        if(isset($_POST['contra2']) && $_POST['contra2'] == ""){
-            $contra2 = 'Error: el campo contraseña está vacío';
-            $flag = false;
-        }
-
-        if(isset($_POST['contra1']) && isset($_POST['contra2'])){
-            if($_POST['contra1'] != $_POST['contra2']){
-                $contra2 = "La contraseña no coincide";
-                $flag = false;
-            }
         }
         
-        if(isset($_POST['mail']) && $_POST['mail'] != ""){
-            if(!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $_POST['mail'])){
-                $mail = "Introduce un email válido";
+        if(isset($_POST['telefono']) && $_POST['telefono'] != ""){
+            if(!preg_match('/[0-9]{9}/', $_POST['telefono'])){
+                $telefono = "Introduce un teléfono válido";
                 $flag = false;
             }
-        }
-
-        if(!isset($_POST['condiciones'])){
-            $flag = false;
         }
 
         if(isset($_POST['nombre'])){
             $valorNombre = $_POST['nombre'];
         }
 
-        if(isset($_POST['apellidos'])){
-            $valorApellidos = $_POST['apellidos'];
+        if(isset($_POST['apellido1'])){
+            $valorApellido1 = $_POST['apellido1'];
         }
 
-        if(isset($_POST['usuario'])){
-            $valorUsuario = $_POST['usuario'];
+        if(isset($_POST['apellido2'])){
+            $valorApellido2 = $_POST['apellido2'];
         }
 
-        if(isset($_POST['contra1']) && $_POST['contra1'] == ""){
-            $valorContra1 = $_POST['contra1'];
+        if(isset($_POST['telefono'])){
+            $valorTelefono = $_POST['telefono'];
         }
-        
-        if(isset($_POST['mail'])){
-            $valorMail = $_POST['mail'];
-        }
+
 
         if((isset($_POST['boton']) && $_POST['boton'] == "Enviar") && $flag == true){
+            $query = "INSERT INTO contacto (nombre, apellido1, apellido2, telefono) VALUES (\"".$_POST['nombre']."\", \"".$_POST['apellido1']."\", \"".$_POST['apellido2']."\", \"".$_POST['telefono']."\");";
+            $agenda->query($query);
             echo 'Formulario enviado correctamente';
         }else{
             echo ' 
                 <label for="nombre">Nombre: </label> 
                 <input type="text" name="nombre" id="nombre" value="' . $valorNombre . '"> '.$nombre.'<br><br>
 
-                <label for="apellidos">Apellidos: </label>
-                <input type="text" name="apellidos" id="apellidos" value="' . $valorApellidos . '">'.$apellidos.'<br><br>
+                <label for="apellido1">Primer Apellido: </label>
+                <input type="text" name="apellido1" id="apellido1" value="' . $valorApellido1 . '">'.$apellido1.'<br><br>
 
-                <label for="usuario">Nombre de Usuario: </label>
-                <input type="text" name="usuario" id="usuario" value="' . $valorUsuario . '">'.$usuario.'<br><br>
+                <label for="apellido2">Segundo Apellido: </label>
+                <input type="text" name="apellido2" id="apellido2" value="' . $valorApellido2 . '">'.$apellido2.'<br><br>
 
-                <label for="contra1">Contraseña:</label>
-                <input type="text" name="contra1" id="contra1" value="' . $valorContra1 . '">'.$contra1.'<br><br>
-
-                <label for="contra2">Repetir contraseña: </label>
-                <input type="text" name="contra2" id="contra2"> '.$contra2.'<br><br>
-
-                <label for="mail">Correo electrónico: </label>
-                <input type="text" name="mail" id="mail" value="' . $valorMail . '">' . $mail . '<br><br>
-
-                <label for="fecha">Fecha de nacimiento: </label>
-                <input type="date" name="fecha"><br><br>
-
-                <input type="radio" name="sexo" checked>Hombre</input>
-                <input type="radio" name="sexo">Mujer</input><br><br>
-
-                <input type="checkbox" name="condiciones" checked>Acepto las condiciones</input>' . $condiciones . ' <br><br>
-
-                <input type="checkbox" name="publi">Acepto el envío de publicidad</input><br><br>
+                <label for="telefono">Número de Teléfono: </label>
+                <input type="text" name="telefono" id="telefono" value="' . $valorTelefono . '">'.$telefono.'<br><br>
 
                 <input type="submit" value="Enviar" name="boton"></input><br><br><br>
 
@@ -126,12 +89,3 @@
             
         }
 ?>
-
-
-
-<?php
-    include("footer.inc.php");
-
-?>
-
- 
