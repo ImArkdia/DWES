@@ -12,6 +12,7 @@
         $valorApellido2 = "";
         $telefono = " ";
         $valorTelefono = "";
+        $borrado = "";
         @$agenda = new mysqli('localhost', 'agenda', 'agenda', 'agenda');
         if ($agenda->connect_errno != null) {
             echo 'Error conectando a la base de datos: ';
@@ -42,10 +43,11 @@
         }
         
         if(isset($_POST['telefono']) && $_POST['telefono'] != ""){
-            if(!preg_match('/[0-9]{9}/', $_POST['telefono'])){
+            if(!preg_match("/[0-9]{9}/", $_POST['telefono'])){
                 $telefono = "Introduce un teléfono válido";
                 $flag = false;
             }
+
         }
 
         if(isset($_POST['nombre'])){
@@ -64,9 +66,12 @@
             $valorTelefono = $_POST['telefono'];
         }
 
+        if(isset($_GET['borrado'])){
+            $borrado = "El contacto ha sido borrado satisfactoriamente.";
+        }
 
         if((isset($_POST['boton']) && $_POST['boton'] == "Enviar") && $flag == true){
-            $query = "INSERT INTO contacto (nombre, apellido1, apellido2, telefono) VALUES (\"".$_POST['nombre']."\", \"".$_POST['apellido1']."\", \"".$_POST['apellido2']."\", \"".$_POST['telefono']."\");";
+            $query = "INSERT INTO contacto (nombre, apellido1, apellido2, telefono) VALUES (\"".$valorNombre."\", \"".$valorApellido1."\", \"".$valorApellido2."\", \"".$valorTelefono."\");";
             $agenda->query($query);
             echo 'Formulario enviado correctamente';
         }else{
@@ -84,7 +89,7 @@
                 <input type="text" name="telefono" id="telefono" value="' . $valorTelefono . '">'.$telefono.'<br><br>
 
                 <input type="submit" value="Enviar" name="boton"></input><br><br><br>
-
+                '.$borrado.'<br><br>
             </form>
             ';
             $query = "SELECT * FROM contacto";
@@ -108,6 +113,6 @@
                 }
             }
             
-            
+            $agenda->close();
         }
 ?>

@@ -5,12 +5,19 @@
         echo $agenda->connect_error;
         exit();
     }
-
-    $query = 'SELECT id FROM contacto WHERE id='.$_GET['id'];
-    $resultado = $agenda->query($query, MYSQLI_USE_RESULT);
+    $id = $_GET['id'];
+    $query = "SELECT * FROM contacto WHERE id='".$id."';";
+    $resultado = $agenda->query($query);
     if($resultado->num_rows > 0){
-        
+        $query = "DELETE FROM contacto WHERE id='".$id."';";
+        $resultado = $agenda->query($query);
+        header("Location: ./contactonuevo.php?borrado='true'");
+        $agenda->close();
+        exit();
     }else{
         echo 'ERROR: No existe el contacto seleccionado';
+        $agenda->close();
     }
+    
+    
 ?>

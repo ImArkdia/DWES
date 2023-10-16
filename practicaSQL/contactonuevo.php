@@ -63,9 +63,8 @@
             $valorTelefono = $_POST['telefono'];
         }
 
-
         if((isset($_POST['boton']) && $_POST['boton'] == "Enviar") && $flag == true){
-            $query = "INSERT INTO contacto (nombre, apellido1, apellido2, telefono) VALUES (\"".$_POST['nombre']."\", \"".$_POST['apellido1']."\", \"".$_POST['apellido2']."\", \"".$_POST['telefono']."\");";
+            $query = "INSERT INTO contacto (nombre, apellido1, apellido2, telefono) VALUES (\"".$valorNombre."\", \"".$valorApellido1."\", \"".$valorApellido2."\", \"".$valorTelefono."\");";
             $agenda->query($query);
             echo 'Formulario enviado correctamente';
         }else{
