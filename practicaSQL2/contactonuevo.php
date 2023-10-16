@@ -46,8 +46,15 @@
             if(!preg_match("/[0-9]{9}/", $_POST['telefono'])){
                 $telefono = "Introduce un teléfono válido";
                 $flag = false;
+            }else{
+                $select = "SELECT * FROM contacto WHERE telefono='".$_POST['telefono']."';";
+                $resultadoSelect = $agenda->query($select);
+                if($resultadoSelect->num_rows > 0){
+                    $flag = false;
+                    $telefono = "El teléfono ya existe en tus contactos";
+                }
+                $resultadoSelect->close();
             }
-
         }
 
         if(isset($_POST['nombre'])){
